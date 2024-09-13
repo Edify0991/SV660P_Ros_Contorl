@@ -23,19 +23,22 @@ KERNELS=="3-5.4:1.0", MODE:="0777", GROUP:="dialout", SYMLINK+="usb_hip_lb"
 KERNELS=="3-5.3.3.4:1.0", MODE:="0777", GROUP:="dialout", SYMLINK+="usb_hip_rr"
 KERNELS=="3-8.3.4:1.0", MODE:="0777", GROUP:="dialout", SYMLINK+="usb_hip_rb"
 */
+
+/* 绑定串口设备 0904
+KERNELS=="3-8.3.1:1.0", MODE:="0777", GROUP:="dialout", SYMLINK+="USB_hip_right_pitch"
+KERNELS=="3-8.3.3.1:1.0", MODE:="0777", GROUP:="dialout", SYMLINK+="USB_hip_left_roll"
+KERNELS=="3-8.3.3.3:1.0", MODE:="0777", GROUP:="dialout", SYMLINK+="USB_hip_left_pitch"
+KERNELS=="3-8.3.4.1:1.0", MODE:="0777", GROUP:="dialout", SYMLINK+="USB_hip_right_roll"
+*/
 // 是否控制电机
 const bool control_motor = true;
 // 定义所有的电机的名字 第一个l/r表示左右腿，第二个l/r/f/b表示在腿上的位置
 std::vector<std::string> motor_name_ = { 
                                 // "imu",
-								"hip_lb",
-                                "hip_ll",  
-                                "hip_rb",
-                                "hip_rr", 
-                                "ankle_ll",
-                                "ankle_lr",
-								"ankle_rr",
-                                "ankle_rl",
+								"hip_left_pitch",
+                                "hip_left_roll",  
+                                "hip_right_pitch",
+                                "hip_right_roll"
                                 };
 
 std::vector<std::thread> threads;
@@ -121,7 +124,7 @@ int main(int argc, char** argv)
     for(int i=0;i<motor_name_.size();i++)
     {
 
-        motor_ports.push_back(new SerialPort("/dev/usb_" + motor_name_[i]));
+        motor_ports.push_back(new SerialPort("/dev/USB_" + motor_name_[i]));
         motor_state_pub[i] = nh.advertise<line_motor_comm_pkg::motorMsgBack>(motor_name_[i] + "_state", 1);
         threads[i] = std::thread(UnitreeMotor_CmdThread, i, std::ref(nh));    
     }

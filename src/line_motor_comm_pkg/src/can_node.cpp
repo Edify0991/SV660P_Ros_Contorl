@@ -48,7 +48,7 @@ void LineMotorCmdCallback(const line_motor_comm_pkg::linemotorMsgCmd::ConstPtr& 
     relPos = msg->x;
     refSpeed = msg->dx;
     
-	std::cout << "lineMOtorID :   " << lineMotorID << std::endl;
+	std::cout << "lineMotorID :   \t" << lineMotorID << std::endl;
 	Linemotor_ports[lineMotorID]->Clear_PosCmd();
     if(control_motor) Linemotor_ports[lineMotorID]->RelPos_Set(relPos, refSpeed);
 
@@ -270,7 +270,7 @@ void Receive_Linemotor_Fcn(int CANIndex)
 			// ROS_INFO("RECEIVED！ ");
 			for(int j = 0; j < reclen; j++)
 			{
-				std::cout<<"ID:   " << std::hex<<(rec[j].ID)<<std::endl;
+				// std::cout<<"ID:   " << std::hex<<(rec[j].ID)<<std::endl;
 				if(rec[j].ID  == 0x181) // sdo ID = 1
 				{
 					if(rec[j].Data[0] == 0x80)
@@ -292,7 +292,7 @@ void Receive_Linemotor_Fcn(int CANIndex)
                     linemotor_ret_msg.id = 0;
                     linemotor_ret_msg.x = RTPos_left / 50.0;
                     linemotor_state_pub[0].publish(linemotor_ret_msg);
-                    std::cout<<"线程中的RTPos_left:= "<<std::endl;
+                    // std::cout<<"线程中的RTPos_left:= "<<std::endl;
 					// cout<<"线程中的函数增量"<<(float)((1000-RTPos_left)/50.0)<<endl;
 				}
 				else if(rec[j].ID  == 0x0182)

@@ -52,7 +52,6 @@ volatile double acceleration[3];
 float RTPos_left;//左腿绝对位置,1mm对应50编码器值
 float RTPos_right;//右腿绝对位置
 const int usleep_time = 1000;
-const int pause_time = 0;
 
 // 踝关节电机返回值
 float current_pos[4] = {0};
@@ -109,8 +108,8 @@ float kneel_period[number_period] = {0};
 float kneer_period[number_period] = {0};
 float anklel_period[number_period] = {0};
 float ankler_period[number_period] = {0};
-float to_left_factor = 1.0;
-float to_right_factor = 1.0;
+float to_left_factor = 1.1;
+float to_right_factor = 1.2;
 
 double angular[3];
 ros::Publisher linemotor_state_pub;
@@ -425,6 +424,7 @@ int main(int argc, char** argv)
 	// ankle_motor_rd_cmd_pub.publish(ankle_motor_rd_msg);
 	// ankle_motor_ru_cmd_pub.publish(ankle_motor_ru_msg);
 	int k_ankle_hip_roll=1;//踝关节侧摆差动大小与髋侧摆的关系
+
 	int TempCnt1 = 0;
 	// 下蹲 + 暂停
 	for (int i = 0 ; i < 600 ; i++) {
@@ -475,9 +475,9 @@ int main(int argc, char** argv)
 		loop_rate.sleep();
 	}
 
-		int CntPitch = 600;       // 往前迈步时的数组元素位置
-		// 由直立向左侧摆
-		for(int i = 0 ; i < 0.5 * unit_time ; i++) {      //每次走0.5个unit_time
+	int CntPitch = 600;       // 往前迈步时的数组元素位置
+	// 由直立向左侧摆
+	for(int i = 0 ; i < 0.5 * unit_time ; i++) {      //每次走0.5个unit_time
 		
 		motorL_0.PosMode(6, 10, motorL_0_ORI - hip_roll[i % (2 * unit_time)], 1);//“加”为王梦迪的
 		motorR_0.PosMode(6, 10, motorR_0_ORI - hip_roll[i % (2 * unit_time)], 2);
@@ -659,7 +659,7 @@ int main(int argc, char** argv)
 			ros::spinOnce();
 			roll_loop_rate.sleep();
 		}
-		sleep(pause_time);
+		sleep(2);
 		int CntRoll = 1.5 * unit_time - 1;
 		int TempCnt2 = 0;
 		float Kp = 1;
@@ -735,7 +735,7 @@ int main(int argc, char** argv)
 			// right_leg.Clear_PosCmd();
 			// right_leg.RelPos_Set(kneer_period[TempCnt2], 500);
 		}
-		sleep(pause_time);
+
 		// 由右侧向左侧摆至中央
 		for(int i = 1.5 * unit_time ; i < 2 * unit_time ; i++) {      
 			motorL_0.PosMode(6, 10, motorL_0_ORI - hip_roll[i % (2 * unit_time)], 1);
@@ -770,7 +770,7 @@ int main(int argc, char** argv)
 		}
 
 		// 由中央向左侧摆至左侧
-			for(int i = 2 * unit_time ; i < 2.5 * unit_time ; i++) {      
+				for(int i = 2 * unit_time ; i < 2.5 * unit_time ; i++) {      
 			motorL_0.PosMode(6, 10, motorL_0_ORI - hip_roll[i % (2 * unit_time)], 1);
 			motorR_0.PosMode(6, 10, motorR_0_ORI - hip_roll[i % (2 * unit_time)], 2);
 
@@ -801,7 +801,7 @@ int main(int argc, char** argv)
 			ros::spinOnce();
 			roll_loop_rate.sleep();
 		}
-		sleep(pause_time);
+		sleep(2);
 		CntRoll = 0.5 * unit_time - 1;
 		TempCnt2 = number_period / 2;
 		// 迈右腿
@@ -877,7 +877,6 @@ int main(int argc, char** argv)
 			// right_leg.Clear_PosCmd();
 			// right_leg.RelPos_Set(kneer_period[TempCnt2], 500);
 		}
-		sleep(pause_time);
 
 		// 由左侧向右侧摆至直立
 		for(int i = 0.5 * unit_time ; i < unit_time ; i++) {      

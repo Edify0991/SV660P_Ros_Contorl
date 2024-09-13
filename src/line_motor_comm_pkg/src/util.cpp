@@ -1,5 +1,7 @@
 #include "util.h"
 
+#define PI 3.1415926
+
 namespace util
 {
     // 函数来写入 q/dq 数据到 CSV 文件
@@ -45,6 +47,7 @@ namespace util
                         case 2:	// left_angle_rad3
                         {	
                             anklel[num] = std::stof(cell);
+                            anklel[num] = anklel[num] / PI * 180.0;
                             break; // 仅获取第二列后退出循环
                         }
                         case 3:	// right_angle_rad1
@@ -60,6 +63,7 @@ namespace util
                         case 5:	// right_angle_rad3
                         {	
                             ankler[num] = std::stof(cell);
+                            ankler[num] = ankler[num] / PI * 180.0;
                             break; // 仅获取第二列后退出循环
                         }
                         default:
